@@ -1,0 +1,43 @@
+#VRML_SIM R2021a utf8
+WorldInfo {
+  info [
+    "CSCI 3302 Lab 2: Odometry"
+    "Prof. Brad Hayes, University of Colorado Boulder, Fall 2020"
+  ]
+  title "E-Puck"
+  coordinateSystem "NUE"
+  lineScale 0.04
+}
+Viewpoint {
+  orientation 0.9994962643501051 0.030121613695327953 0.00999529582224933 5.642087693382341
+  position -0.05581450395261389 0.9086953820204857 1.1990922416036935
+  follow "e-puck"
+  followType "None"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  translation 0.275 0 -0.21
+  floorSize 0.9 0.9
+  floorTileSize 0.9 0.9
+  floorAppearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "texture/line_course.png"
+      ]
+    }
+    roughness 0.2
+    metalness 0
+  }
+  wallHeight 0.05
+}
+DEF EPUCK E-puck {
+  rotation 0 1 0 3.1415
+  controller "csci3302_lab2"
+  groundSensorsSlot [
+    E-puckGroundSensors {
+    }
+  ]
+}
