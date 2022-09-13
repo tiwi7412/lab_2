@@ -27,6 +27,10 @@ robot = Robot()
 # ePuck Constants
 EPUCK_AXLE_DIAMETER = 0.053 # ePuck's wheels are 53mm apart.
 EPUCK_MAX_WHEEL_SPEED = 0 # TODO: To be filled in with ePuck wheel speed in m/s
+#start (0,0,0) at 0 secs
+#end (0.603, -6.39e-05, 5.76e-05) at 4.832 sec
+#distance traveled ~0.603
+#speed = distance/time = 0.603/4.832 = 0.1248m/s
 MAX_SPEED = 6.28
 
 # get the time step of the current world.
@@ -37,8 +41,8 @@ leftMotor = robot.getDevice('left wheel motor')
 rightMotor = robot.getDevice('right wheel motor')
 leftMotor.setPosition(float('inf'))
 rightMotor.setPosition(float('inf'))
-leftMotor.setVelocity(0.0)
-rightMotor.setVelocity(0.0)
+leftMotor.setVelocity(MAX_SPEED)
+rightMotor.setVelocity(MAX_SPEED)
 
 # Initialize and Enable the Ground Sensors
 gsr = [0, 0, 0]
@@ -47,10 +51,10 @@ for gs in ground_sensors:
     gs.enable(SIM_TIMESTEP)
 
 # Allow sensors to properly initialize
-for i in range(10): robot.step(SIM_TIMESTEP)  
+for i in range(4): robot.step(SIM_TIMESTEP)  
 
-vL = 0 # TODO: Initialize variable for left speed
-vR = 0 # TODO: Initialize variable for right speed
+vL = MAX_SPEED # TODO: Initialize variable for left speed
+vR = MAX_SPEED # TODO: Initialize variable for right speed
 
 # Main Control Loop:
 while robot.step(SIM_TIMESTEP) != -1:
