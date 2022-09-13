@@ -9,7 +9,7 @@ import os
 # Ground Sensor Measurements under this threshold are black
 # measurements above this threshold can be considered white.
 # TODO: Fill this in with a reasonable threshold that separates "line detected" from "no line detected"
-GROUND_SENSOR_THRESHOLD = 0
+GROUND_SENSOR_THRESHOLD = 302 #anything under this is a black line
 
 # These are your pose values that you will update by solving the odometry equations
 pose_x = 0
@@ -26,11 +26,11 @@ robot = Robot()
 
 # ePuck Constants
 EPUCK_AXLE_DIAMETER = 0.053 # ePuck's wheels are 53mm apart.
-EPUCK_MAX_WHEEL_SPEED = 0 # TODO: To be filled in with ePuck wheel speed in m/s
+EPUCK_MAX_WHEEL_SPEED = 0.1248 # TODO: To be filled in with ePuck wheel speed in m/s
 #start (0,0,0) at 0 secs
-#end (0.603, -6.39e-05, 5.76e-05) at 4.832 sec
-#distance traveled ~0.603
-#speed = distance/time = 0.603/4.832 = 0.1248m/s
+#end (0.624, -6.39e-05, 5.76e-05) at 4.832 sec
+#distance traveled ~0.624
+#speed = distance/time = 0.624/4.832 = 0.129
 MAX_SPEED = 6.28
 
 # get the time step of the current world.
@@ -117,6 +117,12 @@ while robot.step(SIM_TIMESTEP) != -1:
     # 2) Use the pose when you encounter the line last 
     # for best results
     
-    print("Current pose: [%5f, %5f, %5f]" % (pose_x, pose_y, pose_theta))
+    #print("Current pose: [%5f, %5f, %5f]" % (pose_x, pose_y, pose_theta))
     leftMotor.setVelocity(vL)
     rightMotor.setVelocity(vR)
+    
+class line_follower:
+    print("gs0: ", gsr[0], " gs1: ", gsr[1], " gsr2: ", gsr[2])
+    #for i in enumerate(ground_sensors):
+     #   if gsr[i] == GROUND_SENSOR_THRESHOLD:
+     #       break
