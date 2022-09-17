@@ -26,7 +26,7 @@ robot = Robot()
 
 # ePuck Constants
 EPUCK_AXLE_DIAMETER = 0.053 # ePuck's wheels are 53mm apart.
-EPUCK_MAX_WHEEL_SPEED = 0.1248 # TODO: To be filled in with ePuck wheel speed in m/s
+EPUCK_MAX_WHEEL_SPEED = 0.129 # TODO: To be filled in with ePuck wheel speed in m/s
 #start (0,0,0) at 0 secs
 #end (0.624, -6.39e-05, 5.76e-05) at 4.832 sec
 #distance traveled ~0.624
