@@ -1,4 +1,4 @@
-#VRML_SIM R2021a utf8
+#VRML_SIM R2022a utf8
 WorldInfo {
   info [
     "CSCI 3302 Lab 2: Odometry"
@@ -9,8 +9,8 @@ WorldInfo {
   lineScale 0.04
 }
 Viewpoint {
-  orientation 0.9994962643501051 0.030121613695327953 0.00999529582224933 5.642087693382341
-  position -0.05581450395261389 0.9086953820204857 1.1990922416036935
+  orientation -0.7105956878417596 0.6870031541601518 0.15192246244285038 2.6766421214563825
+  position 0.08036345390764323 1.2957351005796232 0.7207660928322668
   follow "e-puck"
   followType "None"
 }
@@ -20,6 +20,7 @@ TexturedBackgroundLight {
 }
 RectangleArena {
   translation 0.275 0 -0.21
+  rotation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0943951023931957
   floorSize 0.9 0.9
   floorTileSize 0.9 0.9
   floorAppearance PBRAppearance {
@@ -34,7 +35,7 @@ RectangleArena {
   wallHeight 0.05
 }
 DEF EPUCK E-puck {
-  rotation 0 1 0 3.1415
+  rotation -0.9999999978536052 -4.6329199900559244e-05 -4.6329199900559244e-05 1.5708
   controller "csci3302_lab2"
   groundSensorsSlot [
     E-puckGroundSensors {

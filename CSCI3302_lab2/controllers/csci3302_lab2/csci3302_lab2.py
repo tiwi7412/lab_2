@@ -9,7 +9,7 @@ import os
 # Ground Sensor Measurements under this threshold are black
 # measurements above this threshold can be considered white.
 # TODO: Fill this in with a reasonable threshold that separates "line detected" from "no line detected"
-GROUND_SENSOR_THRESHOLD = 302 #anything under this is a black line
+GROUND_SENSOR_THRESHOLD = 500 #anything under this is a black line
 
 # These are your pose values that you will update by solving the odometry equations
 pose_x = 0
@@ -56,9 +56,72 @@ for i in range(4): robot.step(SIM_TIMESTEP)
 vL = MAX_SPEED # TODO: Initialize variable for left speed
 vR = MAX_SPEED # TODO: Initialize variable for right speed
 
+class controller:
+    def __init__(self):
+        self.begin = 0
+        
+    def what_to_do(self):
+        self.begin+=1
+        if self.begin < 60:
+            if (self.begin) < 45:
+                return right_turn()
+            else: 
+                return forward()
+                 
+        if all(i <= GROUND_SENSOR_THRESHOLD for i in gsr): #means that completely covering a line
+            return finishline()
+            
+        elif gsr[1] <= GROUND_SENSOR_THRESHOLD:
+            return forward()
+            
+        elif all(i >= GROUND_SENSOR_THRESHOLD for i in gsr):
+            return u_turn()
+            
+        elif gsr[2] > GROUND_SENSOR_THRESHOLD and gsr[1] > GROUND_SENSOR_THRESHOLD:
+            return right_turn()
+            
+        elif gsr[0] > GROUND_SENSOR_THRESHOLD and gsr[1] > GROUND_SENSOR_THRESHOLD:
+            return left_turn() 
+              
+
+class finishline:
+    def __init__(self):
+        print("Arrived at the finish line!")
+    def get_vals(self): 
+        return (MAX_SPEED, MAX_SPEED)
+
+class forward:
+    def __init__(self):
+        self.vL = MAX_SPEED
+        self.vR = MAX_SPEED
+    def get_vals(self): 
+        return (self.vL, self.vR)
+       
+class right_turn:
+    def __init__(self):
+        self.vL = 0.5 * MAX_SPEED
+        self.vR = 0
+    def get_vals(self): 
+        return (self.vL, self.vR)
+        
+class left_turn:
+    def __init__(self):
+        self.vL = 0
+        self.vR = 0.5 * MAX_SPEED
+    def get_vals(self): 
+        return (self.vL, self.vR)
+        
+class u_turn:
+    def __init__(self):
+        self.vL = -0.5 * MAX_SPEED
+        self.vR = 0.5 * MAX_SPEED
+    def get_vals(self): 
+        return (self.vL, self.vR)
+        
+my_controller = controller()
+
 # Main Control Loop:
 while robot.step(SIM_TIMESTEP) != -1:
-
     # Read ground sensor values
     for i, gs in enumerate(ground_sensors):
         gsr[i] = gs.getValue()
@@ -82,9 +145,7 @@ while robot.step(SIM_TIMESTEP) != -1:
     
     # TODO: Insert Line Following Code Here                
     
-    
-    
-    
+    vL, vR = my_controller.what_to_do().get_vals()
     
     
     
@@ -121,8 +182,3 @@ while robot.step(SIM_TIMESTEP) != -1:
     leftMotor.setVelocity(vL)
     rightMotor.setVelocity(vR)
     
-class line_follower:
-    print("gs0: ", gsr[0], " gs1: ", gsr[1], " gsr2: ", gsr[2])
-    #for i in enumerate(ground_sensors):
-     #   if gsr[i] == GROUND_SENSOR_THRESHOLD:
-     #       break
