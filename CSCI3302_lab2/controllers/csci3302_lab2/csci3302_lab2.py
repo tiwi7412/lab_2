@@ -81,10 +81,10 @@ class controller:
         elif all(i >= GROUND_SENSOR_THRESHOLD for i in gsr):
             return u_turn()
             
-        elif gsr[2] > GROUND_SENSOR_THRESHOLD and gsr[1] > GROUND_SENSOR_THRESHOLD:
+        elif gsr[0] < GROUND_SENSOR_THRESHOLD:
             return right_turn()
             
-        elif gsr[0] > GROUND_SENSOR_THRESHOLD and gsr[1] > GROUND_SENSOR_THRESHOLD:
+        elif gsr[2] < GROUND_SENSOR_THRESHOLD:
             return left_turn()
             
         else:
@@ -141,10 +141,14 @@ def update_odometry(pose_y, pose_x, pose_theta):
         pose_theta += theta
         pose_y += distance * math.sin(pose_theta)
         pose_x += distance * math.cos(pose_theta)
-    else: #turning left
+    elif vL_precentage == 0: #turning left
         distance = vR_precentage * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
         theta = math.asin(distance/EPUCK_AXLE_DIAMETER)
         pose_theta += theta
+        pose_y += distance * math.sin(pose_theta)
+        pose_x += distance * math.cos(pose_theta)
+    else: #straight
+        distance = vR_precentage * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
         pose_y += distance * math.sin(pose_theta)
         pose_x += distance * math.cos(pose_theta)
     #print(vR_precentage, "  " , theta)
