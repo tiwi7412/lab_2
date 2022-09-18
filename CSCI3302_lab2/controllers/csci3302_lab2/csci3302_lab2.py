@@ -120,7 +120,7 @@ class left_turn:
         
 class u_turn:
     def __init__(self):
-        self.vL = -0.5 * MAX_SPEED
+        self.vL = 0
         self.vR = 0.5 * MAX_SPEED
     def get_vals(self): 
         return (self.vL, self.vR)
@@ -134,19 +134,25 @@ def loop_closure(): #use when the robot passes over finish line
 def update_odometry(pose_y, pose_x, pose_theta):
     vL_precentage = vL/MAX_SPEED
     vR_precentage = vR/MAX_SPEED
-    if vR_precentage == 0 or vL_precentage == 0:
-        distance = (vR_precentage + vL_precentage) * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
+    if vR_precentage == 0: #turning right
+        distance = -vL_precentage * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
         theta = math.asin(distance/EPUCK_AXLE_DIAMETER)
-        pose_y += distance * math.cos(theta)
-        pose_x += distance * math.sin(theta)
         pose_theta += theta
+        pose_y += distance * math.sin(pose_theta)
+        pose_x += distance * math.cos(pose_theta)
+    elif vL_precentage == 0: #turning left
+        distance = vR_precentage * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
+        theta = math.asin(distance/EPUCK_AXLE_DIAMETER)
+        pose_theta += theta
+        pose_y += distance * math.sin(pose_theta)
+        pose_x += distance * math.cos(pose_theta)
     else: #u-turn
-        distance = (vR_precentage + vL_precentage) * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
-        theta = math.asin(distance/EPUCK_AXLE_DIAMETER)/2 #both wheels move the same speed so radiu is halfed
-        pose_y += distance * math.cos(theta)
-        pose_x += distance * math.sin(theta)
+        distance = (MAX_SPEED) * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
+        theta = math.asin(distance/EPUCK_AXLE_DIAMETER)/2 #both wheels move the same speed so rotation point is halfed
         pose_theta += theta
+    #print(vR_precentage, "  " , theta)
     print("x_pos: ", pose_x, " y_pose: ", pose_y, " theta_pose: ", pose_theta)
+    return pose_x, pose_y, pose_theta
         
 # Main Control Loop:
 while robot.step(SIM_TIMESTEP) != -1:
@@ -178,7 +184,7 @@ while robot.step(SIM_TIMESTEP) != -1:
     
     
     # TODO: Call update_odometry Here
-    update_odometry(pose_y, pose_x, pose_theta)
+    pose_x, pose_y, pose_theta = update_odometry(pose_y, pose_x, pose_theta)
     # Hints:
     #
     # 1) Divide vL/vR by MAX_SPEED to normalize, then multiply with
