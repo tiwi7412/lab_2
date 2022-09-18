@@ -59,8 +59,10 @@ vR = MAX_SPEED # TODO: Initialize variable for right speed
 class controller:
     def __init__(self):
         self.begin = 0
+        self.finishline_steps = 0
         
     def what_to_do(self):
+    
         self.begin+=1
         if self.begin < 60:
             if (self.begin) < 45:
@@ -69,10 +71,12 @@ class controller:
                 return forward()
                  
         if all(i <= GROUND_SENSOR_THRESHOLD for i in gsr): #means that completely covering a line
-            return finishline()
-            
-        elif gsr[1] <= GROUND_SENSOR_THRESHOLD:
-            return forward()
+            if self.finishline_steps >= 4:
+                self.finishline_steps = 0
+                return finishline()
+            else:
+                self.finishline_steps += 1
+                return forward()
             
         elif all(i >= GROUND_SENSOR_THRESHOLD for i in gsr):
             return u_turn()
@@ -81,7 +85,10 @@ class controller:
             return right_turn()
             
         elif gsr[0] > GROUND_SENSOR_THRESHOLD and gsr[1] > GROUND_SENSOR_THRESHOLD:
-            return left_turn() 
+            return left_turn()
+            
+        else:
+            return forward()
               
 
 class finishline:
@@ -119,7 +126,28 @@ class u_turn:
         return (self.vL, self.vR)
         
 my_controller = controller()
-
+def loop_closure(): #use when the robot passes over finish line
+    pose_x = 0.487
+    pose_y = 0.0803 
+    pose_theta = 0 #basially 0
+    
+def update_odometry(pose_y, pose_x, pose_theta):
+    vL_precentage = vL/MAX_SPEED
+    vR_precentage = vR/MAX_SPEED
+    if vR_precentage == 0 or vL_precentage == 0:
+        distance = (vR_precentage + vL_precentage) * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
+        theta = math.asin(distance/EPUCK_AXLE_DIAMETER)
+        pose_y += distance * math.cos(theta)
+        pose_x += distance * math.sin(theta)
+        pose_theta += theta
+    else: #u-turn
+        distance = (vR_precentage + vL_precentage) * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
+        theta = math.asin(distance/EPUCK_AXLE_DIAMETER)/2 #both wheels move the same speed so radiu is halfed
+        pose_y += distance * math.cos(theta)
+        pose_x += distance * math.sin(theta)
+        pose_theta += theta
+    print("x_pos: ", pose_x, " y_pose: ", pose_y, " theta_pose: ", pose_theta)
+        
 # Main Control Loop:
 while robot.step(SIM_TIMESTEP) != -1:
     # Read ground sensor values
@@ -150,7 +178,7 @@ while robot.step(SIM_TIMESTEP) != -1:
     
     
     # TODO: Call update_odometry Here
-    
+    update_odometry(pose_y, pose_x, pose_theta)
     # Hints:
     #
     # 1) Divide vL/vR by MAX_SPEED to normalize, then multiply with
