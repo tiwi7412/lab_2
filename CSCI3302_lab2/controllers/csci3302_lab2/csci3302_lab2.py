@@ -93,6 +93,7 @@ class controller:
 
 class finishline:
     def __init__(self):
+        loop_closure()
         print("Arrived at the finish line!")
     def get_vals(self): 
         return (MAX_SPEED, MAX_SPEED)
@@ -127,10 +128,10 @@ class u_turn:
         
 my_controller = controller()
 def loop_closure(): #use when the robot passes over finish line
+    global pose_x, pose_y, pose_theta
     pose_x = 0.487
     pose_y = 0.0803 
     pose_theta = 0 #basially 0
-    return pose_x, pose_y, pose_theta
     
 def update_odometry(pose_y, pose_x, pose_theta):
     vL_precentage = vL/MAX_SPEED
@@ -139,14 +140,14 @@ def update_odometry(pose_y, pose_x, pose_theta):
         distance = -vL_precentage * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
         theta = math.asin(distance/EPUCK_AXLE_DIAMETER)
         pose_theta += theta
-        pose_y += distance * math.sin(pose_theta)
-        pose_x += distance * math.cos(pose_theta)
+        pose_y += distance/2 * math.sin(pose_theta)
+        pose_x += distance/2 * math.cos(pose_theta)
     elif vL_precentage == 0: #turning left
         distance = vR_precentage * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
         theta = math.asin(distance/EPUCK_AXLE_DIAMETER)
         pose_theta += theta
-        pose_y += distance * math.sin(pose_theta)
-        pose_x += distance * math.cos(pose_theta)
+        pose_y += distance/2 * math.sin(pose_theta)
+        pose_x += distance/2 * math.cos(pose_theta)
     else: #straight
         distance = vR_precentage * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
         pose_y += distance * math.sin(pose_theta)
