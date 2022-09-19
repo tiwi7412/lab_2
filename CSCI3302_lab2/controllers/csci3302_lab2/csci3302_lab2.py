@@ -64,8 +64,8 @@ class controller:
     def what_to_do(self):
     
         self.begin+=1
-        if self.begin < 60:
-            if (self.begin) < 45:
+        if self.begin < 100:
+            if (self.begin) < 80:
                 return right_turn()
             else: 
                 return forward()
@@ -129,9 +129,9 @@ class u_turn:
 my_controller = controller()
 def loop_closure(): #use when the robot passes over finish line
     global pose_x, pose_y, pose_theta
-    pose_x = 0.487
-    pose_y = 0.0803 
-    pose_theta = 0 #basially 0
+    pose_x = -0.183
+    pose_y = -0.447 
+    pose_theta = -1.57 #-pi/2
     
 def update_odometry():
     global pose_x, pose_y, pose_theta
@@ -153,9 +153,6 @@ def update_odometry():
         distance = vR_precentage * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
         pose_y += abs(distance) * math.sin(pose_theta)
         pose_x += abs(distance) * math.cos(pose_theta)
-    #print(vR_precentage, "  " , theta)
-    print("x_pos: ", pose_x, " y_pose: ", pose_y, " theta_pose: ", pose_theta)
-    return pose_x, pose_y, pose_theta
         
 # Main Control Loop:
 while robot.step(SIM_TIMESTEP) != -1:
@@ -215,7 +212,7 @@ while robot.step(SIM_TIMESTEP) != -1:
     # 2) Use the pose when you encounter the line last 
     # for best results
     
-    #print("Current pose: [%5f, %5f, %5f]" % (pose_x, pose_y, pose_theta))
+    print("Current pose: [%5f, %5f, %5f]" % (pose_x, pose_y, pose_theta))
     leftMotor.setVelocity(vL)
     rightMotor.setVelocity(vR)
     
