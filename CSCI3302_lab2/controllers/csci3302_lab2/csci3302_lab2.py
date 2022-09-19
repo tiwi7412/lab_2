@@ -133,7 +133,8 @@ def loop_closure(): #use when the robot passes over finish line
     pose_y = 0.0803 
     pose_theta = 0 #basially 0
     
-def update_odometry(pose_y, pose_x, pose_theta):
+def update_odometry():
+    global pose_x, pose_y, pose_theta
     vL_precentage = vL/MAX_SPEED
     vR_precentage = vR/MAX_SPEED
     if vR_precentage == 0: #turning right
@@ -186,7 +187,7 @@ while robot.step(SIM_TIMESTEP) != -1:
     
     
     # TODO: Call update_odometry Here
-    pose_x, pose_y, pose_theta = update_odometry(pose_y, pose_x, pose_theta)
+    update_odometry()
     # Hints:
     #
     # 1) Divide vL/vR by MAX_SPEED to normalize, then multiply with
