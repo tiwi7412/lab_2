@@ -141,18 +141,18 @@ def update_odometry():
         distance = -vL_precentage * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
         theta = math.asin(distance/EPUCK_AXLE_DIAMETER)
         pose_theta += theta
-        pose_y += distance/2 * math.sin(pose_theta)
-        pose_x += distance/2 * math.cos(pose_theta)
+        pose_y += abs(distance/2) * math.sin(pose_theta)
+        pose_x += abs(distance/2) * math.cos(pose_theta)
     elif vL_precentage == 0: #turning left
         distance = vR_precentage * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
         theta = math.asin(distance/EPUCK_AXLE_DIAMETER)
         pose_theta += theta
-        pose_y += distance/2 * math.sin(pose_theta)
-        pose_x += distance/2 * math.cos(pose_theta)
+        pose_y += abs(distance/2) * math.sin(pose_theta)
+        pose_x += abs(distance/2) * math.cos(pose_theta)
     else: #straight
         distance = vR_precentage * SIM_TIMESTEP / 1000 * EPUCK_MAX_WHEEL_SPEED
-        pose_y += distance * math.sin(pose_theta)
-        pose_x += distance * math.cos(pose_theta)
+        pose_y += abs(distance) * math.sin(pose_theta)
+        pose_x += abs(distance) * math.cos(pose_theta)
     #print(vR_precentage, "  " , theta)
     print("x_pos: ", pose_x, " y_pose: ", pose_y, " theta_pose: ", pose_theta)
     return pose_x, pose_y, pose_theta
